@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: securemarks_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: securemarks_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./backend/sql/schema.sql:/docker-entrypoint-initdb.d/01_schema.sql
+      - ./backend/sql/functions.sql:/docker-entrypoint-initdb.d/02_functions.sql
+      - ./backend/sql/triggers.sql:/docker-entrypoint-initdb.d/03_triggers.sql
+      - ./backend/sql/views.sql:/docker-entrypoint-initdb.d/04_views.sql
+      - ./backend/sql/seed.sql:/docker-entrypoint-initdb.d/05_seed.sql
+
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: securemarks_backend
+    restart: always
+    environment:
+      POSTGRES_SERVER: db
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: securemarks_db
+      SECRET_KEY: securemarks_secret_key_jwt_super_safe_2026_token
+      DEMO_MODE: "true"
+      DEVICE_API_KEY: esp32_securemarks_device_key_2026
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: securemarks_frontend
+    restart: always
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+
+volumes:
+  pgdata:

@@ -1,0 +1,50 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+.pytest_cache/
+
+# Node & Frontend
+node_modules/
+dist/
+.vite/
+
+# PostgreSQL data (local cluster)
+pgsql_data/
+pgsql.zip
+*.log
+
+# Environment secrets
+.env
+
+# OS files
+Thumbs.db
+.DS_Store
+
+
+# PostgreSQL installation and database files
+pgsql/
+pgsql_data/
+
+# Python cache
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Virtual environments
+venv/
+.venv/
+
+# Environment secrets
+.env
+
+# Node dependencies
+node_modules/
+
+# System files
+.DS_Store
+Thumbs.db
